@@ -1,0 +1,190 @@
+import java.util.*;
+
+public class DoubleLinkedList {
+    private Node head;
+    private Node tail;
+
+    private class Node {
+        Node prev;
+        int data;
+        Node next;
+
+        Node(int data) {
+            this.data = data;
+        }
+    }
+
+    public void insertAtFront(int data) {
+        Node newNode = new Node(data);
+        if (head == null) {
+            head = newNode;
+            tail = newNode;
+        } else {
+            newNode.next = head;
+            head.prev = newNode;
+            head = newNode;
+        }
+    }
+
+    public void insertAtEnd(int data) {
+        Node newNode = new Node(data);
+        if (head == null) {
+            head = newNode;
+            tail = newNode;
+        } else {
+            newNode.prev = tail;
+            tail.next = newNode;
+            tail = newNode;
+        }
+    }
+
+    public void insertAtIndex(int index, int data) {
+        Node newNode = new Node(data);
+        if (index <= 0) {
+            insertAtFront(data);
+        } else {
+            Node current = head;
+            int currentIndex = 0;
+
+            while (current != null && currentIndex < index - 1) {
+                current = current.next;
+                currentIndex++;
+            }
+
+            if (current != null) {
+                newNode.prev = current;
+                newNode.next = current.next;
+
+                if (current.next != null) {
+                    current.next.prev = newNode;
+                }
+
+                current.next = newNode;
+            } else {
+                System.out.println("Invalid index. Element not inserted.");
+            }
+        }
+    }
+
+    public void delete(int data) {
+        Node current = head;
+        while (current != null) {
+            if (current.data == data) {
+                if (current == head) {
+                    head = current.next;
+                    if (head != null) {
+                        head.prev = null;
+                    }
+                } else if (current == tail) {
+                    tail = current.prev;
+                    if (tail != null) {
+                        tail.next = null;
+                    }
+                } else {
+                    current.prev.next = current.next;
+                    current.next.prev = current.prev;
+                }
+                return;
+            }
+            current = current.next;
+        }
+    }
+
+    public void displayForward() {
+        Node current = head;
+        while (current != null) {
+            System.out.print(current.data + " ");
+            current = current.next;
+        }
+        System.out.println();
+    }
+
+    public void displayBackward() {
+        Node current = tail;
+        while (current != null) {
+            System.out.print(current.data + " ");
+            current = current.prev;
+        }
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+        int size, i, val;
+        Scanner input = new Scanner(System.in);
+        DoubleLinkedList list = new DoubleLinkedList();
+
+        System.out.print("Enter the size of the linked list: ");
+        size = input.nextInt();
+
+        for (i = 0; i < size; i++) {
+            System.out.print("Enter the value to be inserted: ");
+            val = input.nextInt();
+            list.insertAtEnd(val);
+        }
+
+        int choice;
+        do {
+            System.out.println("What would you like to do?");
+            System.out.println("1. Insert at the Front\n2. Insert at the Back");
+            System.out.println("3. Insert New Value");
+            System.out.println("4. Display in Forward order\n5. Display in Backward order");
+            System.out.println("6. Delete an element");
+            System.out.print("Enter the number of your choice: ");
+            choice = input.nextInt();
+            if (choice == 1) {
+                System.out.print("Enter the value to insert at the front: ");
+                val = input.nextInt();
+                list.insertAtFront(val);
+                System.out.println("List in forward order:");
+                list.displayForward();
+
+                System.out.println("List in backward order:");
+                list.displayBackward();
+            } 
+            else if (choice == 2) {
+                System.out.print("Enter the value to insert at the end: ");
+                val = input.nextInt();
+                list.insertAtEnd(val);
+                System.out.println("List in forward order:");
+                list.displayForward();
+
+                System.out.println("List in backward order:");
+                list.displayBackward();
+            }
+            else if (choice == 3) {
+                System.out.print("Enter the value to insert: ");
+                val = input.nextInt();
+                System.out.print("Enter the index where you want to insert: ");
+                int index = input.nextInt();
+                list.insertAtIndex(index, val);
+
+                System.out.println("List in forward order:");
+                list.displayForward();
+
+                System.out.println("List in backward order:");
+                list.displayBackward();
+            } 
+            else if (choice == 4) {
+                System.out.println("List in forward order:");
+                list.displayForward();
+            } 
+            else if (choice == 5) {
+                System.out.println("List in backward order:");
+                list.displayBackward();
+            } 
+            else if (choice == 6) {
+                System.out.print("Enter the value to delete: ");
+                val = input.nextInt();
+                list.delete(val);
+                
+                System.out.println("List in forward order:");
+                list.displayForward();
+
+                System.out.println("List in backward order:");
+                list.displayBackward();
+            } else {
+                System.out.println("Error, Try Again");
+            }
+        } while (!(choice == 1 || choice == 2 || choice == 3 || choice == 4 || choice == 5 || choice == 6));
+    }
+}
